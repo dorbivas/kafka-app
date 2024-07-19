@@ -1,0 +1,7 @@
+my-kafka-app/
+├── Chart.yaml
+├── values.yaml
+├── templates/
+│   ├── api-producer-deployment.yaml
+│   ├── kafka-consumer-deployment.yaml
+│   └── common-services.yaml

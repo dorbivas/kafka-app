@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.kafkaConsumer.name }}
+spec:
+  replicas: {{ .Values.kafkaConsumer.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.kafkaConsumer.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.kafkaConsumer.name }}
+    spec:
+      containers:
+      - name: {{ .Values.kafkaConsumer.name }}
+        image: "{{ .Values.kafkaConsumer.image.repository }}:{{ .Values.kafkaConsumer.image.tag }}"
+        ports:
+        - containerPort: 80
+        imagePullPolicy: {{ .Values.kafkaConsumer.image.pullPolicy }}

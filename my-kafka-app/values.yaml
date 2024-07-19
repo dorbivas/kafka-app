@@ -1,0 +1,25 @@
+apiProducer:
+  replicaCount: 1
+  image:
+    repository: dorbivas/kafka-producer-test
+    tag: latest
+    pullPolicy: Always
+  name: api-producer
+  service:
+    type: ClusterIP
+    port: 8080
+
+kafkaConsumer:
+  replicaCount: 1
+  image:
+    repository: dorbivas/kafka-consumer
+    tag: latest
+    pullPolicy: IfNotPresent
+  name: kafka-consumer
+  service:
+    type: ClusterIP
+    port: 8081
+
+kafka:
+  configurationOverrides:
+    auto.create.topics.enable: "true"

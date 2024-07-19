@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.apiProducer.name }}
+spec:
+  replicas: {{ .Values.apiProducer.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.apiProducer.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.apiProducer.name }}
+    spec:
+      containers:
+      - name: {{ .Values.apiProducer.name }}
+        image: "{{ .Values.apiProducer.image.repository }}:{{ .Values.apiProducer.image.tag }}"
+        ports:
+        - containerPort: 80
+        imagePullPolicy: {{ .Values.apiProducer.image.pullPolicy }}
