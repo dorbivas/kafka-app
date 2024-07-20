@@ -20,15 +20,53 @@ kafkaConsumer:
     type: ClusterIP
     port: 8081
 
+# zookeeper:
+#   enabled: true
+# kafka:
+#   replicaCount: 3  # Adjust the number of Kafka brokers as needed
+#   controller:
+#     replicaCount: 0  # No controllers in Zookeeper mode
+#   kraft:
+#     enabled: false  # Important: Ensure KRaft mode is disabled
+#   config:
+#     log.message.format.version: "2.8"
+
+global:
+  storageClass: standard
+
+replicaCount: 3
+
 zookeeper:
   enabled: true
+  replicaCount: 3
+
+persistence:
+  enabled: false
+
 kafka:
-  replicaCount: 3  # Adjust the number of Kafka brokers as needed
-  controller:
-    replicaCount: 0  # No controllers in Zookeeper mode
-  kraft:
-    enabled: false  # Important: Ensure KRaft mode is disabled
-  config:
-    log.message.format.version: "2.8"
+  # Basic Kafka configuration
+  replicaCount: 3
+  autoCreateTopicsEnable: true
+  deleteTopicEnable: true
 
+  # Custom configuration to optimize for Python app producing messages every minute
+  logFlushIntervalMessages: 10000
+  logFlushIntervalMs: 1000
 
+  # Listener setup for simple internal communication; adjust if external access needed
+  service:
+    type: ClusterIP
+    port: 9092
+    annotations: {}
+
+  # Topic creation: Define the topic as part of the deployment
+  extraDeploy: |
+    - apiVersion: kafka.apache.org/v1beta1
+      kind: KafkaTopic
+      metadata:
+        name: my-topic
+        namespace: default
+      spec:
+        partitions: 3
+        replicationFactor: 3
+        topicName: "test-topic"
