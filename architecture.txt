@@ -1,0 +1,10 @@
+High-Level Architecture:
+
+API Producer: A Python application that runs every 60 seconds to fetch data from an external API and sends it to a Kafka topic.
+Kafka Cluster: Deployed using the Bitnami Kafka Helm chart on Kubernetes, ensures high availability and data persistence.
+Kafka Consumer: A Python application that continuously listens to the Kafka topic, consumes data, and prints it to stdout.
+Components:
+
+Minikube: Local Kubernetes cluster.
+Kafka Helm Chart: Manages the deployment of Kafka.
+Python Applications: Two separate components for producing and consuming messages.

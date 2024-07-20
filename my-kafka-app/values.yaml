@@ -20,6 +20,15 @@ kafkaConsumer:
     type: ClusterIP
     port: 8081
 
+zookeeper:
+  enabled: true
 kafka:
-  configurationOverrides:
-    auto.create.topics.enable: "true"
+  replicaCount: 3  # Adjust the number of Kafka brokers as needed
+  controller:
+    replicaCount: 0  # No controllers in Zookeeper mode
+  kraft:
+    enabled: false  # Important: Ensure KRaft mode is disabled
+  config:
+    log.message.format.version: "2.8"
+
+

@@ -1,3 +1,4 @@
+#helm chart
 my-kafka-app/
 ├── Chart.yaml
 ├── values.yaml
@@ -5,3 +6,27 @@ my-kafka-app/
 │   ├── api-producer-deployment.yaml
 │   ├── kafka-consumer-deployment.yaml
 │   └── common-services.yaml
+
+kafka-app
+├── api-producer
+│   ├── api-producer.py
+│   ├── api-producer-test.py
+│   ├── deploy.sh
+│   ├── Dockerfile
+│   └── requirements.txt
+├── kafka-bitnami.sh
+├── kafka-consumer
+│   ├── deploy.sh
+│   ├── Dockerfile
+│   ├── kafka-consumer.py
+│   └── requirements.txt
+├── my-kafka-app
+│   ├── Chart.yaml
+│   ├── templates
+│   │   ├── api-producer-deployment.yaml
+│   │   ├── common-services.yaml
+│   │   └── kafka-consumer-deployment.yaml
+│   └── values.yaml
+├── structure
+└── watch_pods.sh
+
