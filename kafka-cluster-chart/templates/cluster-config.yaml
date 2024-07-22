@@ -1,0 +1,15 @@
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+#   name: kafka-init-job
+#   annotations:
+#     "helm.sh/hook": post-install
+# spec:
+#   template:
+#     spec:
+#       containers:
+#       - name: kafka-init
+#         image: bitnami/kafka:latest
+#         command: ["kafka-topics.sh"]
+#         args: ["--bootstrap-server", "my-kafka-headless:9092", "--create", "--topic", "test-topic", "--partitions", "1", "--replication-factor", "1"]
+#       restartPolicy: OnFailure

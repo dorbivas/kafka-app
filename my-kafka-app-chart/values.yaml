@@ -1,26 +1,4 @@
 
-# apiProducer:
-#   replicaCount: 1
-#   image:
-#     repository: dorbivas/kafka-producer-test
-#     tag: latest
-#     pullPolicy: Always
-#   name: api-producer
-#   service:
-#     type: ClusterIP
-#     port: 8080
-
-# kafkaConsumer:
-#   replicaCount: 1
-#   image:
-#     repository: dorbivas/kafka-consumer
-#     tag: latest
-#     pullPolicy: IfNotPresent
-#   name: kafka-consumer
-#   service:
-#     type: ClusterIP
-#     port: 8081
-
 
 # ## Kafka configuration tailored for KRaft mode with essential settings
 # kafka:
@@ -92,8 +70,8 @@ kafka:
 
   ## Disable all security features
   extraEnvVars:
-    - name: KAFKA_ENABLE_KRAFT
-      value: "yes"
+    #- name: KAFKA_ENABLE_KRAFT
+    #  value: "yes"
     - name: KAFKA_CFG_PROCESS_ROLES
       value: "broker,controller"
     - name: KAFKA_CFG_LISTENERS
