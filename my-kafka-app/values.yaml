@@ -1,3 +1,69 @@
+
+# apiProducer:
+#   replicaCount: 1
+#   image:
+#     repository: dorbivas/kafka-producer-test
+#     tag: latest
+#     pullPolicy: Always
+#   name: api-producer
+#   service:
+#     type: ClusterIP
+#     port: 8080
+
+# kafkaConsumer:
+#   replicaCount: 1
+#   image:
+#     repository: dorbivas/kafka-consumer
+#     tag: latest
+#     pullPolicy: IfNotPresent
+#   name: kafka-consumer
+#   service:
+#     type: ClusterIP
+#     port: 8081
+
+
+# ## Kafka configuration tailored for KRaft mode with essential settings
+# kafka:
+#   replicaCount: 1  # Single broker for simplicity
+
+#   ## Disable all security features
+#   extraEnvVars:
+#     - name: KAFKA_ENABLE_KRAFT
+#       value: "yes"
+#     - name: KAFKA_CFG_PROCESS_ROLES
+#       value: "broker,controller"
+#     - name: KAFKA_CFG_LISTENERS
+#       value: "PLAINTEXT://:9092"
+#     - name: KAFKA_CFG_ADVERTISED_LISTENERS
+#       value: "PLAINTEXT://$(MY_POD_IP):9092"
+#     - name: KAFKA_BROKER_ID
+#       value: "1"
+#     - name: ALLOW_PLAINTEXT_LISTENER
+#       value: "yes"
+#     - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
+#       value: "true"
+
+#   ## Listener configuration
+#   service:
+#     type: ClusterIP
+#     port: 9092  # Default port for Kafka
+
+#   ## Resource settings (adjust as necessary for your environment)
+#   resources:
+#     requests:
+#       memory: "512Mi"
+#       cpu: "500m"
+#     limits:
+#       memory: "1024Mi"
+#       cpu: "1000m"
+
+
+
+apiVersion: v2
+name: my-kafka
+version: 0.1.0
+
+## Producer configuration
 apiProducer:
   replicaCount: 1
   image:
@@ -9,6 +75,7 @@ apiProducer:
     type: ClusterIP
     port: 8080
 
+## Consumer configuration
 kafkaConsumer:
   replicaCount: 1
   image:
@@ -20,53 +87,36 @@ kafkaConsumer:
     type: ClusterIP
     port: 8081
 
-# zookeeper:
-#   enabled: true
-# kafka:
-#   replicaCount: 3  # Adjust the number of Kafka brokers as needed
-#   controller:
-#     replicaCount: 0  # No controllers in Zookeeper mode
-#   kraft:
-#     enabled: false  # Important: Ensure KRaft mode is disabled
-#   config:
-#     log.message.format.version: "2.8"
-
-global:
-  storageClass: standard
-
-replicaCount: 3
-
-zookeeper:
-  enabled: true
-  replicaCount: 3
-
-persistence:
-  enabled: false
-
 kafka:
-  # Basic Kafka configuration
-  replicaCount: 3
-  autoCreateTopicsEnable: true
-  deleteTopicEnable: true
+  replicaCount: 1  # Single broker for simplicity
 
-  # Custom configuration to optimize for Python app producing messages every minute
-  logFlushIntervalMessages: 10000
-  logFlushIntervalMs: 1000
+  ## Disable all security features
+  extraEnvVars:
+    - name: KAFKA_ENABLE_KRAFT
+      value: "yes"
+    - name: KAFKA_CFG_PROCESS_ROLES
+      value: "broker,controller"
+    - name: KAFKA_CFG_LISTENERS
+      value: "PLAINTEXT://:9092"
+    - name: KAFKA_CFG_ADVERTISED_LISTENERS
+      value: "PLAINTEXT://$(MY_POD_IP):9092"
+    - name: KAFKA_BROKER_ID
+      value: "1"
+    - name: ALLOW_PLAINTEXT_LISTENER
+      value: "yes"
+    - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
+      value: "true"
 
-  # Listener setup for simple internal communication; adjust if external access needed
+  ## Service configuration
   service:
     type: ClusterIP
-    port: 9092
-    annotations: {}
+    port: 9092  # Default port for Kafka
 
-  # Topic creation: Define the topic as part of the deployment
-  extraDeploy: |
-    - apiVersion: kafka.apache.org/v1beta1
-      kind: KafkaTopic
-      metadata:
-        name: my-topic
-        namespace: default
-      spec:
-        partitions: 3
-        replicationFactor: 3
-        topicName: "test-topic"
+  ## Resource settings (adjust as necessary for your environment)
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "1024Mi"
+      cpu: "1000m"
