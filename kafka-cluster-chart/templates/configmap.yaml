@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: kafka-controller-configuration
+  name: kafka-config
 data:
   server.properties: |
     broker.id={{ .Values.kafkaConfig.brokerId }}
@@ -9,3 +9,7 @@ data:
     auto.create.topics.enable={{ .Values.kafkaConfig.autoCreateTopicsEnable }}
     advertised.listeners=PLAINTEXT://$(MY_POD_IP):9092
     listeners=PLAINTEXT://:9092
+    sasl.enabled.mechanisms=
+    security.inter.broker.protocol=PLAINTEXT
+    sasl.mechanism.inter.broker.protocol=PLAIN
+    zookeeper.ssl.client.enable=false

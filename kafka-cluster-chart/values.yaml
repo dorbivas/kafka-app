@@ -1,3 +1,8 @@
+kafka:
+  ssl: false
+  sasl:
+    enabled: false
+
 replicaCount: 3
 
 kafkaConfig:
@@ -9,27 +14,30 @@ auth:
   enabled: false
   clientProtocol: plaintext
   interBrokerProtocol: plaintext
-
-extraEnvVars:
-  - name: KAFKA_LOG4J_LOGGERS
-    value: "kafka.controller=DEBUG,kafka.server=DEBUG,state.change.logger=DEBUG"
-
-# resources:
-#   requests:
-#     cpu: "1"
-#     memory: "1Gi"
-#   limits:
-#     cpu: "2"
-#     memory: "2Gi"
+  sasl:
+    mechanism: ""
+    interBrokerMechanism: ""
 
 service:
   type: ClusterIP
   port: 9092
 
-# livenessProbe:
-#   tcpSocket:
-#     port: 9092
-    
-# readinessProbe:
-#   tcpSocket:
-#     port: 9092
+resources:
+  limits:
+    cpu: "1"
+    memory: "2Gi"
+  requests:
+    cpu: "500m"
+    memory: "1Gi"
+
+livenessProbe:
+  tcpSocket:
+    port: 9092
+  initialDelaySeconds: 15
+  periodSeconds: 10
+
+readinessProbe:
+  tcpSocket:
+    port: 9092
+  initialDelaySeconds: 5
+  periodSeconds: 10
