@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-controller-configuration
+data:
+  server.properties: |
+    broker.id={{ .Values.kafkaConfig.brokerId }}
+    log.dirs={{ .Values.kafkaConfig.logDirs }}
+    auto.create.topics.enable={{ .Values.kafkaConfig.autoCreateTopicsEnable }}
+    advertised.listeners=PLAINTEXT://$(MY_POD_IP):9092
+    listeners=PLAINTEXT://:9092

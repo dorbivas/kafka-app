@@ -1,0 +1,108 @@
+# apiVersion: apps/v1
+# kind: StatefulSet
+# metadata:
+#   name: {{ include "kafka.fullname" . }}
+#   labels:
+#     {{- include "kafka.labels" . | nindent 4 }}
+# spec:
+#   serviceName: "{{ include "kafka.fullname" . }}-headless"
+#   replicas: {{ .Values.replicaCount }}
+#   selector:
+#     matchLabels:
+#       {{- include "kafka.selectorLabels" . | nindent 6 }}
+#   template:
+#     metadata:
+#       labels:
+#         {{- include "kafka.labels" . | nindent 8 }}
+#     spec:
+#       securityContext:
+#         fsGroup: 1001
+#       containers:
+#       - name: kafka
+#         image: "bitnami/kafka:latest"
+#         ports:
+#         - name: kafka
+#           containerPort: 9092
+#         envFrom:
+#         - configMapRef:
+#             name: kafka-controller-configuration
+#         livenessProbe:
+#           {{- toYaml .Values.livenessProbe | nindent 10 }}
+#         readinessProbe:
+#           {{- toYaml .Values.readinessProbe | nindent 10 }}
+#         resources:
+#           {{- toYaml .Values.resources | nindent 10 }}
+#         volumeMounts:
+#         - name: data
+#           mountPath: /var/lib/kafka/data
+#       volumes:
+#       - name: data
+#         emptyDir: {}
+
+      
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "kafka.fullname" . }}
+spec:
+  serviceName: "{{ include "kafka.fullname" . }}-headless"
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "kafka.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kafka.labels" . | nindent 8 }}
+    spec:
+      securityContext:
+        fsGroup: 1001
+      containers:
+      - name: kafka
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - name: kafka
+          containerPort: 9092
+        env:
+          - name: KAFKA_CFG_SASL_ENABLED_MECHANISMS
+            value: ""
+          - name: KAFKA_CFG_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM
+            value: ""
+          - name: KAFKA_CFG_SASL_MECHANISM_INTER_BROKER_PROTOCOL
+            value: ""
+          - name: KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
+            value: "PLAINTEXT:PLAINTEXT"
+          - name: KAFKA_CFG_LISTENERS
+            value: "PLAINTEXT://:9092"
+          - name: KAFKA_CFG_ADVERTISED_LISTENERS
+            value: "PLAINTEXT://$(MY_POD_IP):9092"
+        envFrom:
+        - configMapRef:
+            name: kafka-controller-configuration
+        livenessProbe:
+          tcpSocket:
+            port: 9092
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 6
+        readinessProbe:
+          tcpSocket:
+            port: 9092
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 5
+          failureThreshold: 6
+        resources:
+          requests:
+            cpu: "1"
+            memory: "1Gi"
+          limits:
+            cpu: "2"
+            memory: "2Gi"
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/kafka/data
+      volumes:
+      - name: data
+        emptyDir: {}

@@ -1,32 +1,35 @@
-
 replicaCount: 3
 
-## Configure Kafka with PLAINTEXT listeners and no security
+kafkaConfig:
+  brokerId: 0
+  logDirs: "/var/lib/kafka/data"
+  autoCreateTopicsEnable: "true"
+
 auth:
   enabled: false
   clientProtocol: plaintext
   interBrokerProtocol: plaintext
 
-## Kafka configuration
-config:
-  advertised.listeners: PLAINTEXT://$(MY_POD_NAME).my-kafka-headless.default.svc.cluster.local:9092
-  listeners: PLAINTEXT://:9092
-  auto.create.topics.enable: "false"  # Disable auto-creation to manage topics via job
+extraEnvVars:
+  - name: KAFKA_LOG4J_LOGGERS
+    value: "kafka.controller=DEBUG,kafka.server=DEBUG,state.change.logger=DEBUG"
 
-## Service configurations
+# resources:
+#   requests:
+#     cpu: "1"
+#     memory: "1Gi"
+#   limits:
+#     cpu: "2"
+#     memory: "2Gi"
+
 service:
   type: ClusterIP
   port: 9092
 
-## Persistence settings, adjust based on your needs, disabling for simplicity
-persistence:
-  enabled: false
-
-## Resource configurations, adjust as necessary
-resources:
-  requests:
-    memory: "512Mi"
-    cpu: "500m"
-  limits:
-    memory: "1024Mi"
-    cpu: "1000m"
+# livenessProbe:
+#   tcpSocket:
+#     port: 9092
+    
+# readinessProbe:
+#   tcpSocket:
+#     port: 9092
