@@ -13,10 +13,6 @@ spec:
       labels:
         app: kafka
     spec:
-      initContainers:
-      - name: init-config
-        image: busybox
-        command: ['sh', '-c', 'sleep 5']
       containers:
       - name: kafka
         image: "bitnami/kafka:latest"
@@ -26,12 +22,36 @@ spec:
         - name: controller
           containerPort: 9093
         env:
+        - name: MY_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: KAFKA_CFG_NODE_ID
+          value: "0"
+        - name: KAFKA_CFG_BROKER_ID
+          value: "{{ .Values.kafkaConfig.brokerId }}"
+        - name: KAFKA_CFG_LOG_DIRS
+          value: "{{ .Values.kafkaConfig.logDirs }}"
+        - name: KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE
+          value: "{{ .Values.kafkaConfig.autoCreateTopicsEnable }}"
         - name: KAFKA_CFG_LISTENERS
-          value: "PLAINTEXT://:9092,CONTROLLER://:9093"
+          value: "{{ .Values.kafkaConfig.listeners }}"
         - name: KAFKA_CFG_ADVERTISED_LISTENERS
-          value: "PLAINTEXT://$(POD_IP):9092,CONTROLLER://$(POD_IP):9093"
-        - name: KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
-          value: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+          value: "PLAINTEXT://$(MY_POD_IP):9092"
+        - name: KAFKA_CFG_PROCESS_ROLES
+          value: "{{ .Values.kafkaConfig.processRoles }}"
+        - name: KAFKA_CFG_CONTROLLER_QUORUM_VOTERS
+          value: "{{ .Values.kafkaConfig.controllerQuorumVoters }}"
+        - name: KAFKA_CFG_ZOOKEEPER_CONNECT
+          value: ""
+        - name: KAFKA_CFG_ZOOKEEPER_METADATA_MIGRATION_ENABLE
+          value: "false"
+        - name: KAFKA_CFG_INTER_BROKER_PROTOCOL_VERSION
+          value: "{{ .Values.kafkaConfig.interBrokerProtocolVersion }}"
+        - name: KAFKA_KRAFT_CLUSTER_ID
+          value: "{{ .Values.kafkaConfig.kraftClusterId }}"
+        - name: KAFKA_CFG_CONTROLLER_LISTENER_NAMES
+          value: "CONTROLLER"
         volumeMounts:
         - name: data
           mountPath: /var/lib/kafka/data

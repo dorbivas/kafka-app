@@ -6,9 +6,11 @@ data:
   server.properties: |
     broker.id={{ .Values.kafkaConfig.brokerId }}
     log.dirs={{ .Values.kafkaConfig.logDirs }}
+    auto.create.topics.enable={{ .Values.kafkaConfig.autoCreateTopicsEnable }}
     listeners={{ .Values.kafkaConfig.listeners }}
-    advertised.listeners={{ .Values.kafkaConfig.advertisedListeners }}
+    advertised.listeners=PLAINTEXT://{{.Values.podIP}}:9092
     process.roles={{ .Values.kafkaConfig.processRoles }}
     controller.quorum.voters={{ .Values.kafkaConfig.controllerQuorumVoters }}
-    zookeeper.connect={{ .Values.kafkaConfig.zookeeperConnect }}
-    auto.create.topics.enable={{ .Values.kafkaConfig.autoCreateTopicsEnable }}
+    zookeeper.metadata.migration.enable=false
+    inter.broker.protocol.version={{ .Values.kafkaConfig.interBrokerProtocolVersion }}
+    kraft.cluster.id={{ .Values.kafkaConfig.kraftClusterId }}
