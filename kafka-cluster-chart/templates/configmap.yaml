@@ -4,12 +4,14 @@ metadata:
   name: kafka-config
 data:
   server.properties: |
-    broker.id={{ .Values.kafkaConfig.brokerId }}
+    broker.id={{ .Values.kafkaConfig.nodeId }}
     log.dirs={{ .Values.kafkaConfig.logDirs }}
     auto.create.topics.enable={{ .Values.kafkaConfig.autoCreateTopicsEnable }}
-    advertised.listeners=PLAINTEXT://$(MY_POD_IP):9092
     listeners=PLAINTEXT://:9092
-    sasl.enabled.mechanisms=
-    security.inter.broker.protocol=PLAINTEXT
-    sasl.mechanism.inter.broker.protocol=PLAIN
-    zookeeper.ssl.client.enable=false
+    #advertised.listeners=PLAINTEXT://$(MY_POD_IP):9092
+    process.roles={{ .Values.kafkaConfig.processRoles }}
+    node.id={{ .Values.kafkaConfig.nodeId }}
+    controller.quorum.voters=$(MY_POD_IP):9093#{{ .Values.kafkaConfig.controllerQuorumVoters }}
+    # Disable ZooKeeper
+    zookeeper.connect=
+;l

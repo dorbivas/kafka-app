@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "kafka.fullname" . }} 
+  name: kafka
 spec:
-  serviceName: "{{ include "kafka.fullname" . }}-headless"
+  serviceName: "kafka"
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "kafka.selectorLabels" . | nindent 6 }}
+      app: kafka
   template:
     metadata:
       labels:
-        {{- include "kafka.labels" . | nindent 8 }}
+        app: kafka
     spec:
       containers:
       - name: kafka
@@ -19,18 +19,22 @@ spec:
         ports:
         - name: kafka
           containerPort: 9092
-        envFrom:
-        - configMapRef:
-            name: kafka-config
-        livenessProbe:
-          tcpSocket:
-            port: 9092
-        readinessProbe:
-          tcpSocket:
-            port: 9092
+        env:
+        - name: KAFKA_BROKER_ID
+          value: "{{ .Values.kafkaConfig.nodeId }}"
+        - name: MY_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
         volumeMounts:
+        - name: kafka-config
+          mountPath: /opt/bitnami/kafka/config/server.properties
+          subPath: server.properties
         - name: data
           mountPath: /var/lib/kafka/data
       volumes:
+      - name: kafka-config
+        configMap:
+          name: kafka-config
       - name: data
         emptyDir: {}

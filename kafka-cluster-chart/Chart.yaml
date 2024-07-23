@@ -1,8 +1,8 @@
 apiVersion: v2
-name: my-kafka
-description: A Helm chart for deploying a Kafka cluster without authentication
+name: my-kafka-chart
+description: A Helm chart for deploying Kafka
 version: 0.1.0
 dependencies:
   - name: kafka
-    version: "^12.8.1"  # Ensure this version is compatible with your requirements
+    version: "29.3.10"
     repository: "https://charts.bitnami.com/bitnami"

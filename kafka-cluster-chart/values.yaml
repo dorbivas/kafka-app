@@ -1,43 +1,28 @@
-kafka:
-  ssl: false
-  sasl:
-    enabled: false
-
 replicaCount: 3
 
 kafkaConfig:
-  brokerId: 0
+  processRoles: "broker,controller"
   logDirs: "/var/lib/kafka/data"
   autoCreateTopicsEnable: "true"
+  nodeId: 0
+  #controllerQuorumVoters: "1@127.0.0.1:9093"
 
-auth:
+zookeeper:
   enabled: false
-  clientProtocol: plaintext
-  interBrokerProtocol: plaintext
-  sasl:
-    mechanism: ""
-    interBrokerMechanism: ""
+
+configurationOverrides:
+  "listeners": "PLAINTEXT://:9092"
+  #"advertised.listeners": "PLAINTEXT://$(MY_POD_IP):9092"
+  "zookeeper.connect": ""
 
 service:
   type: ClusterIP
   port: 9092
 
 resources:
-  limits:
-    cpu: "1"
-    memory: "2Gi"
   requests:
-    cpu: "500m"
+    cpu: "1"
     memory: "1Gi"
-
-livenessProbe:
-  tcpSocket:
-    port: 9092
-  initialDelaySeconds: 15
-  periodSeconds: 10
-
-readinessProbe:
-  tcpSocket:
-    port: 9092
-  initialDelaySeconds: 5
-  periodSeconds: 10
+  limits:
+    cpu: "2"
+    memory: "2Gi"
