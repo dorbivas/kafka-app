@@ -4,14 +4,11 @@ metadata:
   name: kafka-config
 data:
   server.properties: |
-    broker.id={{ .Values.kafkaConfig.nodeId }}
+    broker.id={{ .Values.kafkaConfig.brokerId }}
     log.dirs={{ .Values.kafkaConfig.logDirs }}
-    auto.create.topics.enable={{ .Values.kafkaConfig.autoCreateTopicsEnable }}
-    listeners=PLAINTEXT://:9092
-    #advertised.listeners=PLAINTEXT://$(MY_POD_IP):9092
+    listeners={{ .Values.kafkaConfig.listeners }}
+    advertised.listeners={{ .Values.kafkaConfig.advertisedListeners }}
     process.roles={{ .Values.kafkaConfig.processRoles }}
-    node.id={{ .Values.kafkaConfig.nodeId }}
-    controller.quorum.voters=$(MY_POD_IP):9093#{{ .Values.kafkaConfig.controllerQuorumVoters }}
-    # Disable ZooKeeper
-    zookeeper.connect=
-;l
+    controller.quorum.voters={{ .Values.kafkaConfig.controllerQuorumVoters }}
+    zookeeper.connect={{ .Values.kafkaConfig.zookeeperConnect }}
+    auto.create.topics.enable={{ .Values.kafkaConfig.autoCreateTopicsEnable }}

@@ -1,19 +1,17 @@
 replicaCount: 3
 
-kafkaConfig:
-  processRoles: "broker,controller"
-  logDirs: "/var/lib/kafka/data"
-  autoCreateTopicsEnable: "true"
-  nodeId: 0
-  #controllerQuorumVoters: "1@127.0.0.1:9093"
-
 zookeeper:
   enabled: false
 
-configurationOverrides:
-  "listeners": "PLAINTEXT://:9092"
-  #"advertised.listeners": "PLAINTEXT://$(MY_POD_IP):9092"
-  "zookeeper.connect": ""
+kafkaConfig:
+  brokerId: 0
+  logDirs: "/var/lib/kafka/data"
+  autoCreateTopicsEnable: true
+  listeners: "PLAINTEXT://:9092"
+  advertisedListeners: "PLAINTEXT://$(MY_POD_IP):9092"
+  processRoles: "broker,controller"
+  controllerQuorumVoters: "0@localhost:9093,1@localhost:9093,2@localhost:9093"
+  zookeeperConnect: ""
 
 service:
   type: ClusterIP
