@@ -1,16 +1,35 @@
-from kafka import KafkaConsumer
-import json
+from confluent_kafka import Consumer, KafkaException
+import os
 
-consumer = KafkaConsumer(
-    'test',
-    bootstrap_servers='my-kafka.default.svc.cluster.local:9092',
-    auto_offset_reset='earliest',
-    value_deserializer=lambda x: json.loads(x.decode('utf-8'))
-)
+# Kafka Consumer Configuration
+consumer_config = {
+    'bootstrap.servers': 'kafka-controller-0.kafka-controller-headless.default.svc.cluster.local:9092,kafka-controller-1.kafka-controller-headless.default.svc.cluster.local:9092,kafka-controller-2.kafka-controller-headless.default.svc.cluster.local:9092',
+    'security.protocol': 'SASL_PLAINTEXT',
+    'sasl.mechanisms': 'SCRAM-SHA-256',
+    'sasl.username': 'user1',
+    'sasl.password': '2VxxUQUFJP',
+    'group.id': 'breeds_group',
+    'auto.offset.reset': 'earliest'
+}
 
-def consume():
-    for message in consumer:
-        print(f"Consumed: {message.value}")
+consumer = Consumer(consumer_config)
+consumer.subscribe(['breeds_topic'])
+
+def consume_data():
+    try:
+        while True:
+            msg = consumer.poll(1.0)
+            if msg is None:
+                continue
+            if msg.error():
+                if msg.error().code() == KafkaError._PARTITION_EOF:
+                    continue
+                else:
+                    print(msg.error())
+                    break
+            print('Received message: {}'.format(msg.value().decode('utf-8')))
+    finally:
+        consumer.close()
 
 if __name__ == "__main__":
-    consume()
+    consume_data()
