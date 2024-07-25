@@ -8,7 +8,7 @@ producer_config = {
     'security.protocol': 'SASL_PLAINTEXT',
     'sasl.mechanisms': 'SCRAM-SHA-256',
     'sasl.username': 'user1',
-    'sasl.password': 'Wubsz4Mm6s'
+    'sasl.password': 'tvw6401HM4'
 }
 
 producer = Producer(producer_config)
@@ -24,17 +24,19 @@ dog_api_key = 'live_kM1boQGZ4B0zy5DfLQX4axOZeMriiKr51Z6g806UPh5LftbVv7vvuSveBZI2
 # print("DOG_API_KEY:", os.getenv('DOG_API_KEY'))
 
 msg_counter = 0
+if msg_counter == 0:
+    time.sleep(10)
 
 def fetch_cat_data():
     headers = {'x-api-key': cat_api_key}
-    response = requests.get('https://api.thecatapi.com/v1/images/search?limit=10', headers=headers)
+    response = requests.get('https://api.thecatapi.com/v1/images/search?limit=5', headers=headers)
     if response.status_code == 200:
         return response.json()
     return []
 
 def fetch_dog_data():
     headers = {'x-api-key': dog_api_key}
-    response = requests.get('https://api.thedogapi.com/v1/images/search?limit=10', headers=headers)
+    response = requests.get('https://api.thedogapi.com/v1/images/search?limit=5', headers=headers)
     if response.status_code == 200:
         return response.json()
     return []
@@ -57,14 +59,17 @@ def produce_data():
         for item in data:
             producer.produce('breeds_topic', key=item['id'], value=str(item), callback=delivery_report)
             producer.poll(0)
+            if msg_counter % 11 == 0 and msg_counter != 0:
+                break
         producer.flush()
         print('Produced cat messages: {}'.format(len(cat_data)))
         print('Produced dog messages: {}'.format(len(dog_data)))
         print('Total messages sent so far: {}'.format(msg_counter))
-        time.sleep(60)
+        time.sleep(20)
 
 if __name__ == "__main__":
     produce_data()
+
 
 
 

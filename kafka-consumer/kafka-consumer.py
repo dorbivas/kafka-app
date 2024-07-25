@@ -7,7 +7,7 @@ consumer_config = {
     'security.protocol': 'SASL_PLAINTEXT',
     'sasl.mechanisms': 'SCRAM-SHA-256',
     'sasl.username': 'user1',
-    'sasl.password': 'Wubsz4Mm6s',
+    'sasl.password': 'tvw6401HM4',
     'group.id': 'breeds_group',
     'auto.offset.reset': 'earliest'
 }
