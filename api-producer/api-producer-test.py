@@ -55,7 +55,7 @@ def produce_data():
             producer.poll(0)
         producer.flush()
         print('Produced message')
-        time.sleep(5)
+        time.sleep(60)
 
 if __name__ == "__main__":
     produce_data()
