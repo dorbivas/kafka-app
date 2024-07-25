@@ -3,14 +3,13 @@ import time
 import requests
 from confluent_kafka import Producer
 import socket
-#
 
 producer_config = {
     'bootstrap.servers': 'kafka-controller-0.kafka-controller-headless.default.svc.cluster.local:9092,kafka-controller-1.kafka-controller-headless.default.svc.cluster.local:9092,kafka-controller-2.kafka-controller-headless.default.svc.cluster.local:9092',
     'security.protocol': 'SASL_PLAINTEXT',
     'sasl.mechanisms': 'SCRAM-SHA-256',
     'sasl.username': 'user1',
-    'sasl.password': 'kafka'
+    'sasl.password': 'Wubsz4Mm6s'
 }
 
 producer = Producer(producer_config)
@@ -55,7 +54,8 @@ def produce_data():
             producer.produce('breeds_topic', key=item['id'], value=str(item), callback=delivery_report)
             producer.poll(0)
         producer.flush()
-        time.sleep(60)
+        print('Produced message')
+        time.sleep(5)
 
 if __name__ == "__main__":
     produce_data()
