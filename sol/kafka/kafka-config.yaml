@@ -20,17 +20,17 @@ kafka:
     # listener.name.sasl_plaintext.scram-sha-256.sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username="kafka" password="kafka";
     # listener.name.controller.plain.sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username="kafka" password="kafka";
 
-  # auth:
-  #   clientProtocol: sasl
-  #   interBrokerProtocol: sasl
-  #   saslMechanisms:
-  #     - SCRAM-SHA-256
-  #   existingSecret: kafka-secret
-  #   jaasConfig:
-  #     clientUsers: kafka
-  #     clientPasswords: kafka
-  #     interBrokerUser: kafka
-  #     interBrokerPassword: kafka
+  auth:
+    clientProtocol: sasl
+    interBrokerProtocol: sasl
+    saslMechanisms:
+      - SCRAM-SHA-256
+    existingSecret: kafka-secret
+    jaasConfig:
+      clientUsers: kafka
+      clientPasswords: kafka
+      interBrokerUser: kafka
+      interBrokerPassword: kafka
 
 metrics:
   kafka:

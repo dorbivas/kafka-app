@@ -2,7 +2,6 @@ import os
 import time
 import requests
 from confluent_kafka import Producer
-import socket
 
 producer_config = {
     'bootstrap.servers': 'kafka-controller-0.kafka-controller-headless.default.svc.cluster.local:9092,kafka-controller-1.kafka-controller-headless.default.svc.cluster.local:9092,kafka-controller-2.kafka-controller-headless.default.svc.cluster.local:9092',
@@ -23,7 +22,8 @@ dog_api_key = 'live_kM1boQGZ4B0zy5DfLQX4axOZeMriiKr51Z6g806UPh5LftbVv7vvuSveBZI2
 
 # print("CAT_API_KEY:", os.getenv('CAT_API_KEY'))
 # print("DOG_API_KEY:", os.getenv('DOG_API_KEY'))
-# time.sleep(10)
+
+msg_counter = 0
 
 def fetch_cat_data():
     headers = {'x-api-key': cat_api_key}
@@ -40,12 +40,16 @@ def fetch_dog_data():
     return []
 
 def delivery_report(err, msg):
+    global msg_counter
     if err is not None:
         print('Message delivery failed: {}'.format(err))
     else:
-        print('Message delivered to {} [{}]'.format(msg.topic(), msg.partition()))
+        msg_counter += 1
+        print('Message delivered to {} partition: {}'.format(msg.topic(), msg.partition()))
+        print('Total messages sent: {}'.format(msg_counter))
 
 def produce_data():
+    global msg_counter
     while True:
         cat_data = fetch_cat_data()
         dog_data = fetch_dog_data()
@@ -54,7 +58,9 @@ def produce_data():
             producer.produce('breeds_topic', key=item['id'], value=str(item), callback=delivery_report)
             producer.poll(0)
         producer.flush()
-        print('Produced message')
+        print('Produced cat messages: {}'.format(len(cat_data)))
+        print('Produced dog messages: {}'.format(len(dog_data)))
+        print('Total messages sent so far: {}'.format(msg_counter))
         time.sleep(60)
 
 if __name__ == "__main__":
