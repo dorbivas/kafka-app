@@ -28,6 +28,8 @@ spec:
               fieldPath: status.podIP
         - name: KAFKA_CFG_NODE_ID
           value: "0"
+        - name: KAFKA_CFG_ZOOKEEPER_METADATA_MIGRATION_ENABLE
+          value: "true"
         - name: KAFKA_CFG_BROKER_ID
           value: "{{ .Values.kafkaConfig.brokerId }}"
         - name: KAFKA_CFG_LOG_DIRS
@@ -37,15 +39,19 @@ spec:
         - name: KAFKA_CFG_LISTENERS
           value: "{{ .Values.kafkaConfig.listeners }}"
         - name: KAFKA_CFG_ADVERTISED_LISTENERS
-          value: "PLAINTEXT://$(MY_POD_IP):9092"
+        - name: MY_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+          value: "PLAINTEXT://$(MY_POD_IP):9092,CONTROLLER://$(MY_POD_IP):9093"
         - name: KAFKA_CFG_PROCESS_ROLES
           value: "{{ .Values.kafkaConfig.processRoles }}"
         - name: KAFKA_CFG_CONTROLLER_QUORUM_VOTERS
           value: "{{ .Values.kafkaConfig.controllerQuorumVoters }}"
         - name: KAFKA_CFG_ZOOKEEPER_CONNECT
-          value: ""
+          value: "{{ .Values.kafkaConfig.zookeeperConnect }}"
         - name: KAFKA_CFG_ZOOKEEPER_METADATA_MIGRATION_ENABLE
-          value: "false"
+          value: "{{ .Values.kafkaConfig.zookeeperMetadataMigrationEnable }}"
         - name: KAFKA_CFG_INTER_BROKER_PROTOCOL_VERSION
           value: "{{ .Values.kafkaConfig.interBrokerProtocolVersion }}"
         - name: KAFKA_KRAFT_CLUSTER_ID
