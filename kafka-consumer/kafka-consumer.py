@@ -1,4 +1,4 @@
-from confluent_kafka import Consumer, KafkaException
+from confluent_kafka import Consumer, KafkaException, KafkaError
 import os
 
 # Kafka Consumer Configuration
@@ -7,9 +7,9 @@ consumer_config = {
     'security.protocol': 'SASL_PLAINTEXT',
     'sasl.mechanisms': 'SCRAM-SHA-256',
     'sasl.username': 'user1',
-    'sasl.password': '7aamoZjFQc',
+    'sasl.password': 'pJCjiaiua4',
     'group.id': 'breeds_group',
-    'auto.offset.reset': 'earliest'
+    'auto.offset.reset': 'latest'
 }
 
 consumer = Consumer(consumer_config)
@@ -36,4 +36,5 @@ def consume_data():
         consumer.close()
 
 if __name__ == "__main__":
+
     consume_data()

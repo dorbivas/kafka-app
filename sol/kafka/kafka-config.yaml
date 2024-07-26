@@ -13,6 +13,8 @@ kafka:
     controller.quorum.voters=0@localhost:9093
     node.id=0
     log.dirs=/bitnami/kafka/data
+    offsets.retention.minutes=1
+    auto.create.topics.enable=true
 
     # # SASL configurations
     # sasl.enabled.mechanisms=SCRAM-SHA-256

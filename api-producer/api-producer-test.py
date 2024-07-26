@@ -8,11 +8,11 @@ producer_config = {
     'security.protocol': 'SASL_PLAINTEXT',
     'sasl.mechanisms': 'SCRAM-SHA-256',
     'sasl.username': 'user1',
-    'sasl.password': '7aamoZjFQc'
+    'sasl.password': 'pJCjiaiua4'
 }
 
 producer = Producer(producer_config)
-
+time.sleep(10)
 # Hardcoded API Keys
 cat_api_key = 'live_jRspfxAS9kUNq55CSurmJLScxtFFT9QongDE3IffWbPaziujpkzzOmgLT44ToEco'
 dog_api_key = 'live_kM1boQGZ4B0zy5DfLQX4axOZeMriiKr51Z6g806UPh5LftbVv7vvuSveBZI2pgau'
@@ -24,8 +24,8 @@ dog_api_key = 'live_kM1boQGZ4B0zy5DfLQX4axOZeMriiKr51Z6g806UPh5LftbVv7vvuSveBZI2
 # print("DOG_API_KEY:", os.getenv('DOG_API_KEY'))
 
 msg_counter = 0
-if msg_counter == 0:
-    time.sleep(10)
+
+
 
 def fetch_cat_data():
     headers = {'x-api-key': cat_api_key}
@@ -62,8 +62,6 @@ def produce_data():
                 break
             producer.produce('breeds_topic', key=item['id'], value=str(item), callback=delivery_report)
             producer.poll(0)
-            producer.flush()
-
         producer.flush()
         print('Produced cat messages: {}'.format(len(cat_data)))
         print('Produced dog messages: {}'.format(len(dog_data)))
@@ -71,11 +69,10 @@ def produce_data():
         print('Total messages sent so far: {}'.format(msg_counter))
         if msg_counter >= 10:
             msg_counter = 0    
-        time.sleep(20)
+        time.sleep(60)
 
 
 if __name__ == "__main__":
-
     produce_data()
 
 

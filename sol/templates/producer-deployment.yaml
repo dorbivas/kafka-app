@@ -12,6 +12,14 @@ spec:
       labels:
         app: breed-producer
     spec:
+      # initContainers:
+      # - name: wait-for-cleanup
+      #   image: bitnami/kubectl:latest
+        # command:
+        # - /bin/sh
+        # - -c
+        # - |
+        #   while [ "$(kubectl get jobs kafka-cleanup-job -o jsonpath='{.status.succeeded}')" != "1" ]; do echo "Waiting for kafka-cleanup-job to complete"; sleep 5; done
       containers:
       - name: producer
         image: dorbivas/kafka-producer-test:latest
