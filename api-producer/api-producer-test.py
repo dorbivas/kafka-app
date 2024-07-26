@@ -8,7 +8,7 @@ producer_config = {
     'security.protocol': 'SASL_PLAINTEXT',
     'sasl.mechanisms': 'SCRAM-SHA-256',
     'sasl.username': 'user1',
-    'sasl.password': 'tvw6401HM4'
+    'sasl.password': '7aamoZjFQc'
 }
 
 producer = Producer(producer_config)
@@ -57,18 +57,28 @@ def produce_data():
         dog_data = fetch_dog_data()
         data = cat_data + dog_data
         for item in data:
+            if msg_counter >= 10:
+                print('brokeloop')
+                break
             producer.produce('breeds_topic', key=item['id'], value=str(item), callback=delivery_report)
             producer.poll(0)
-            if msg_counter % 11 == 0 and msg_counter != 0:
-                break
+            producer.flush()
+
         producer.flush()
         print('Produced cat messages: {}'.format(len(cat_data)))
         print('Produced dog messages: {}'.format(len(dog_data)))
+        print('Produced data messages: {}'.format(len(data)))
         print('Total messages sent so far: {}'.format(msg_counter))
+        if msg_counter >= 10:
+            msg_counter = 0    
         time.sleep(20)
 
+
 if __name__ == "__main__":
+
     produce_data()
+
+
 
 
 

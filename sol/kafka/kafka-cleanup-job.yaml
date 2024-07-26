@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kafka-cleanup-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: kafka-cleanup
+        image: bitnami/kafka:latest
+        command:
+        - /bin/sh
+        - -c
+        - |
+          /opt/bitnami/kafka/bin/kafka-topics.sh --delete --topic breeds_topic --bootstrap-server kafka-controller-0.kafka-controller-headless.default.svc.cluster.local:9092
+          /opt/bitnami/kafka/bin/kafka-topics.sh --create --topic breeds_topic --bootstrap-server kafka-controller-0.kafka-controller-headless.default.svc.cluster.local:9092 --partitions 1 --replication-factor 1
+      restartPolicy: Never
+  backoffLimit: 4

@@ -7,7 +7,7 @@ consumer_config = {
     'security.protocol': 'SASL_PLAINTEXT',
     'sasl.mechanisms': 'SCRAM-SHA-256',
     'sasl.username': 'user1',
-    'sasl.password': 'tvw6401HM4',
+    'sasl.password': '7aamoZjFQc',
     'group.id': 'breeds_group',
     'auto.offset.reset': 'earliest'
 }
@@ -15,7 +15,10 @@ consumer_config = {
 consumer = Consumer(consumer_config)
 consumer.subscribe(['breeds_topic'])
 
+msg_rec_count = 0
+
 def consume_data():
+    global msg_rec_count
     try:
         while True:
             msg = consumer.poll(1.0)
@@ -27,7 +30,8 @@ def consume_data():
                 else:
                     print(msg.error())
                     break
-            print('Received message: {}'.format(msg.value().decode('utf-8')))
+            msg_rec_count += 1
+            print('{} : Received message: {}'.format(msg_rec_count, msg.value().decode('utf-8')))
     finally:
         consumer.close()
 
