@@ -11,49 +11,45 @@ producer_config = {
     'sasl.username': os.getenv('KAFKA_USER'),
     'sasl.password': os.getenv('KAFKA_PASS')
 }
-
 producer = Producer(producer_config)
 
 cat_api_key = os.getenv('CAT_API_KEY')
 dog_api_key = os.getenv('DOG_API_KEY')
 
+TOPIC_NAME = "breeds_topic"
 msg_counter = 0
 
 def create_topic():
+    #handle topic create when kafka empty
     admin_client = AdminClient(producer_config)
-    topic_list = ["breeds_topic"]
+    topic_list = [TOPIC_NAME]
     existing_topics = admin_client.list_topics().topics
 
-    if "breeds_topic" not in existing_topics:
-        topic_list = [NewTopic("breeds_topic", num_partitions=3, replication_factor=1)]
-        fs = admin_client.create_topics(topic_list)
+    if TOPIC_NAME not in existing_topics: 
+        topic_list = [NewTopic(TOPIC_NAME, num_partitions=3, replication_factor=1)]
+        topics = admin_client.create_topics(topic_list)
 
-        for topic, f in fs.items():
+        for topic, item in topics.items():
             try:
-                f.result()
+                item.result()
                 print(f"Topic {topic} created successfully")
+
             except Exception as e:
                 print(f"Failed to create topic {topic}: {e}")
     else:
-        print("Topic 'breeds_topic' already exists")
+        print("breeds_topic already exists")
 
-
-def fetch_cat_data():
-    headers = {'x-api-key': cat_api_key}
-    response = requests.get('https://api.thecatapi.com/v1/images/search?limit=5', headers=headers)
+def fetch_data(api_url, api_key):
+    headers = {'x-api-key': api_key}
+    response = requests.get(api_url, headers=headers)
     if response.status_code == 200:
         return response.json()
-    return []
-
-def fetch_dog_data():
-    headers = {'x-api-key': dog_api_key}
-    response = requests.get('https://api.thedogapi.com/v1/images/search?limit=5', headers=headers)
-    if response.status_code == 200:
-        return response.json()
-    return []
+        
+    return None
 
 def delivery_report(err, msg):
     global msg_counter
+
     if err is not None:
         print('Message delivery failed: {}'.format(err))
     else:
@@ -63,29 +59,30 @@ def delivery_report(err, msg):
 
 def produce_data():
     global msg_counter
+
     while True:
-        cat_data = fetch_cat_data()
-        dog_data = fetch_dog_data()
+        cat_data = fetch_data('https://api.thecatapi.com/v1/images/search?limit=5', cat_api_key)
+        dog_data = fetch_data('https://api.thedogapi.com/v1/images/search?limit=5', dog_api_key)
         data = cat_data + dog_data
+
+        for item in data:
+            #limit production to 10 msgs 
+            if msg_counter >= 10:
+                break
+            producer.produce(TOPIC_NAME, key=item['id'], value=str(item), callback=delivery_report)
+            producer.poll(0)
+
+        producer.flush()
         print('Produced data messages: {}'.format(len(data)))
         print('Total messages sent so far: {}'.format(msg_counter))
-        for item in data:
-            if msg_counter >= 10:
-                print('brokeloop')
-                break
-            producer.produce('breeds_topic', key=item['id'], value=str(item), callback=delivery_report)
-            producer.poll(0)
-        producer.flush()
-        #print('Produced cat messages: {}'.format(len(cat_data)))
-        #print('Produced dog messages: {}'.format(len(dog_data)))
-
         if msg_counter >= 10:
-            msg_counter = 0    
+            msg_counter = 0  
+
         time.sleep(10)
 
 
 if __name__ == "__main__":
-    print("cheacking topic")
+    print("cheacking topics...")
     create_topic()
     time.sleep(10)
     produce_data()

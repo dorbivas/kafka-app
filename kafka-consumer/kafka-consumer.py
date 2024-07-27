@@ -1,7 +1,7 @@
 from confluent_kafka import Consumer, KafkaException, KafkaError
 import os
 
-# Kafka Consumer Configuration
+# Kafka Consumer Config
 consumer_config = {
     'bootstrap.servers': 'kafka-controller-0.kafka-controller-headless.default.svc.cluster.local:9092,kafka-controller-1.kafka-controller-headless.default.svc.cluster.local:9092,kafka-controller-2.kafka-controller-headless.default.svc.cluster.local:9092',
     'security.protocol': 'SASL_PLAINTEXT',
@@ -15,23 +15,24 @@ consumer_config = {
 consumer = Consumer(consumer_config)
 consumer.subscribe(['breeds_topic'])
 
-msg_rec_count = 0
-
+consume_count = 0
 def consume_data():
-    global msg_rec_count
+    global consume_count
     try:
         while True:
             msg = consumer.poll(1.0)
+            #handle empty msg
             if msg is None:
                 continue
             if msg.error():
-                if msg.error().code() == KafkaError._PARTITION_EOF:
+                if msg.error().code() == KafkaError._PARTITION_EOF: 
                     continue
                 else:
                     print(msg.error())
                     break
-            msg_rec_count += 1
-            print('{} : Received message: {}'.format(msg_rec_count, msg.value().decode('utf-8')))
+            consume_count += 1
+            #emit to stdout
+            print('{} : Received message: {}'.format(consume_count, msg.value().decode('utf-8'))) 
     finally:
         consumer.close()
 
