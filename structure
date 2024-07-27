@@ -22,8 +22,6 @@ kafka-app
 │   │   └── producer-deployment.yaml
 │   ├── values.yaml
 │   └── watch_stream.sh
-├── problems-and-sol
 ├── rebuild-app.sh
-├── architecture.txt
 ├── structure
 └── watch_pods.sh
