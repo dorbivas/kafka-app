@@ -5,13 +5,13 @@ producer:
   catApiKey: live_jRspfxAS9kUNq55CSurmJLScxtFFT9QongDE3IffWbPaziujpkzzOmgLT44ToEco
   dogApiKey: live_kM1boQGZ4B0zy5DfLQX4axOZeMriiKr51Z6g806UPh5LftbVv7vvuSveBZI2pgau
   kafkaUser: user1
-  kafkaPass: Nv7uQ23qH3
+  kafkaPass: DgiBIT9Oah
 
 consumer:
   name: breed-consumer
   replicaCount: 1
   image: dorbivas/kafka-consumer:latest
   kafkaUser: user1
-  kafkaPass: Nv7uQ23qH3
+  kafkaPass: DgiBIT9Oah
 
 

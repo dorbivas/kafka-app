@@ -16,12 +16,6 @@ kafka:
     offsets.retention.minutes=1
     auto.create.topics.enable=true
 
-    # # SASL configurations
-    # sasl.enabled.mechanisms=SCRAM-SHA-256
-    # sasl.mechanism.inter.broker.protocol=SCRAM-SHA-256
-    # listener.name.sasl_plaintext.scram-sha-256.sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username="kafka" password="kafka";
-    # listener.name.controller.plain.sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username="kafka" password="kafka";
-
   auth:
     clientProtocol: sasl
     interBrokerProtocol: sasl
@@ -77,15 +71,6 @@ persistence:
     - ReadWriteOnce
   size: 8Gi
 
-# externalAccess:
-#   enabled: false
-#   service:
-#     type: LoadBalancer
-#     port: 19092
-#     loadBalancerIP: ""
-#   autoDiscovery:
-#     enabled: true
-
 serviceAccount:
   create: true
   name: ""
@@ -94,27 +79,12 @@ rbac:
   create: true
   rules: []
 
-# podDisruptionBudget:
-#   create: false
-#   minAvailable: 1
-#   maxUnavailable: ""
-
 autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 11
   targetCPU: 50
   targetMemory: 50
-
-# podAffinityPreset: ""
-# podAntiAffinityPreset: ""
-# nodeAffinityPreset:
-#   type: ""
-#   key: ""
-#   values: []
-# affinity: {}
-# nodeSelector: {}
-# tolerations: []
 
 livenessProbe:
   enabled: true
@@ -131,6 +101,3 @@ readinessProbe:
   timeoutSeconds: 3
   failureThreshold: 3
   successThreshold: 1
-
-# customLivenessProbe: {}
-# customReadinessProbe: {}
