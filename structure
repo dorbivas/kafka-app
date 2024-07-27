@@ -1,32 +1,29 @@
-#helm chart
-my-kafka-app/
-├── Chart.yaml
-├── values.yaml
-├── templates/
-│   ├── api-producer-deployment.yaml
-│   ├── kafka-consumer-deployment.yaml
-│   └── common-services.yaml
 
 kafka-app
 ├── api-producer
 │   ├── api-producer.py
-│   ├── api-producer-test.py
 │   ├── deploy.sh
 │   ├── Dockerfile
 │   └── requirements.txt
-├── kafka-bitnami.sh
 ├── kafka-consumer
 │   ├── deploy.sh
 │   ├── Dockerfile
 │   ├── kafka-consumer.py
 │   └── requirements.txt
-├── my-kafka-app
+├── sol
 │   ├── Chart.yaml
+│   ├── kafka
+│   │   ├── kafka-cleanup-job.yaml
+│   │   ├── kafka-config.yaml
+│   │   ├── OG-vals.yaml
+│   │   └── utils.sh
 │   ├── templates
-│   │   ├── api-producer-deployment.yaml
-│   │   ├── common-services.yaml
-│   │   └── kafka-consumer-deployment.yaml
-│   └── values.yaml
+│   │   ├── consumer-deployment.yaml
+│   │   └── producer-deployment.yaml
+│   ├── values.yaml
+│   └── watch_stream.sh
+├── problems-and-sol
+├── rebuild-app.sh
+├── architecture.txt
 ├── structure
 └── watch_pods.sh
-
