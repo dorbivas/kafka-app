@@ -15,3 +15,8 @@ spec:
       containers:
       - name: consumer
         image: {{ .Values.consumer.image }}
+        env:
+        - name: KAFKA_USER
+          value: "{{ .Values.consumer.kafkaUser }}"
+        - name: KAFKA_PASS
+          value: "{{ .Values.consumer.kafkaPass }}"        

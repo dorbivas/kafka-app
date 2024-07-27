@@ -8,8 +8,8 @@ producer_config = {
     'bootstrap.servers': 'kafka-controller-0.kafka-controller-headless.default.svc.cluster.local:9092,kafka-controller-1.kafka-controller-headless.default.svc.cluster.local:9092,kafka-controller-2.kafka-controller-headless.default.svc.cluster.local:9092',
     'security.protocol': 'SASL_PLAINTEXT',
     'sasl.mechanisms': 'SCRAM-SHA-256',
-    'sasl.username': 'user1',
-    'sasl.password': 'I6ZUCTKN8y'
+    'sasl.username': os.getenv('KAFKA_USER'),
+    'sasl.password': os.getenv('KAFKA_PASS')
 }
 
 producer = Producer(producer_config)

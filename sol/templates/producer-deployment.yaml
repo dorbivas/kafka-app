@@ -20,3 +20,7 @@ spec:
           value: "{{ .Values.producer.catApiKey }}"
         - name: DOG_API_KEY
           value: "{{ .Values.producer.dogApiKey }}"
+        - name: KAFKA_USER
+          value: "{{ .Values.producer.kafkaUser }}"
+        - name: KAFKA_PASS
+          value: "{{ .Values.producer.kafkaPass }}"      
