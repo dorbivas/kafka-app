@@ -1,35 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: breed-consumer
+  name: {{ .Values.consumer.name }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.consumer.replicaCount }}
   selector:
     matchLabels:
-      app: breed-consumer
+      app: {{ .Values.consumer.name }}
   template:
     metadata:
       labels:
-        app: breed-consumer
+        app: {{ .Values.consumer.name }}
     spec:
       containers:
       - name: consumer
-        image: dorbivas/kafka-consumer:latest
-
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: {{ .Values.consumer.name }}
-# spec:
-#   replicas: {{ .Values.consumer.replicaCount }}
-#   selector:
-#     matchLabels:
-#       app: {{ .Values.consumer.name }}
-#   template:
-#     metadata:
-#       labels:
-#         app: {{ .Values.consumer.name }}
-#     spec:
-#       containers:
-#       - name: consumer
-#         image: {{ .Values.consumer.image }}
+        image: {{ .Values.consumer.image }}

@@ -1,9 +1,9 @@
 producer:
   name: breed-producer
   replicaCount: 1
-  image: dorbivas/kafka-producer-test:latest
-  #catApiKey: live_jRspfxAS9kUNq55CSurmJLScxtFFT9QongDE3IffWbPaziujpkzzOmgLT44ToEco
-  #dogApiKey: live_kM1boQGZ4B0zy5DfLQX4axOZeMriiKr51Z6g806UPh5LftbVv7vvuSveBZI2pgau
+  image: dorbivas/kafka-producer:latest
+  catApiKey: live_jRspfxAS9kUNq55CSurmJLScxtFFT9QongDE3IffWbPaziujpkzzOmgLT44ToEco
+  dogApiKey: live_kM1boQGZ4B0zy5DfLQX4axOZeMriiKr51Z6g806UPh5LftbVv7vvuSveBZI2pgau
 
 consumer:
   name: breed-consumer

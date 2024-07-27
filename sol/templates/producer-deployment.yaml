@@ -1,48 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: breed-producer
+  name: {{ .Values.producer.name }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.producer.replicaCount }}
   selector:
     matchLabels:
-      app: breed-producer
+      app: {{ .Values.producer.name }}
   template:
     metadata:
       labels:
-        app: breed-producer
+        app: {{ .Values.producer.name }}
     spec:
-      # initContainers:
-      # - name: wait-for-cleanup
-      #   image: bitnami/kubectl:latest
-        # command:
-        # - /bin/sh
-        # - -c
-        # - |
-        #   while [ "$(kubectl get jobs kafka-cleanup-job -o jsonpath='{.status.succeeded}')" != "1" ]; do echo "Waiting for kafka-cleanup-job to complete"; sleep 5; done
       containers:
       - name: producer
-        image: dorbivas/kafka-producer-test:latest
-
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: {{ .Values.producer.name }}
-# spec:
-#   replicas: {{ .Values.producer.replicaCount }}
-#   selector:
-#     matchLabels:
-#       app: {{ .Values.producer.name }}
-#   template:
-#     metadata:
-#       labels:
-#         app: {{ .Values.producer.name }}
-#     spec:
-#       containers:
-#       - name: producer
-#         image: {{ .Values.producer.image }}
-#         env:
-#         - name: CAT_API_KEY
-#           value: "{{ .Values.producer.catApiKey }}"
-#         - name: DOG_API_KEY
-#           value: "{{ .Values.producer.dogApiKey }}"
+        image: {{ .Values.producer.image }}
+        env:
+        - name: CAT_API_KEY
+          value: "{{ .Values.producer.catApiKey }}"
+        - name: DOG_API_KEY
+          value: "{{ .Values.producer.dogApiKey }}"
