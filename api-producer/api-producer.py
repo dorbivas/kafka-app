@@ -78,7 +78,7 @@ def produce_data():
         if msg_counter >= 10:
             msg_counter = 0  
 
-        time.sleep(10)
+        time.sleep(60)
 
 
 if __name__ == "__main__":
